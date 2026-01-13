@@ -1,0 +1,1745 @@
+{
+	"info": {
+		"_postman_id": "library-mini-collection",
+		"name": "Sistem Perpustakaan Mini",
+		"description": "Collection untuk testing API Sistem Perpustakaan Mini.\n\n## Cara Penggunaan:\n1. Import collection ini ke Postman\n2. Import environment file (Perpustakaan_Mini.postman_environment.json)\n3. Jalankan request \"Login as Admin\" atau \"Login as User\" terlebih dahulu\n4. Token akan otomatis tersimpan di environment variable\n5. Gunakan request lainnya untuk testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"});",
+									"",
+									"pm.test(\"Response has user data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('user');",
+									"    pm.expect(jsonData.user).to.have.property('email');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Register user baru"
+					}
+				},
+				{
+					"name": "Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"    pm.environment.set(\"auth_token\", jsonData.token);",
+									"});",
+									"",
+									"pm.test(\"User is admin\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.role).to.equal('admin');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@library.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Login sebagai admin - Token akan otomatis disimpan"
+					}
+				},
+				{
+					"name": "Login as User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"    pm.environment.set(\"auth_token\", jsonData.token);",
+									"});",
+									"",
+									"pm.test(\"User is regular user\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user.role).to.equal('user');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user1@library.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Login sebagai user biasa - Token akan otomatis disimpan"
+					}
+				},
+				{
+					"name": "Login - Invalid Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response has error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"wrong@email.com\",\n    \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Test login dengan kredensial salah"
+					}
+				},
+				{
+					"name": "Get Current User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has user data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('role');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"me"
+							]
+						},
+						"description": "Get data user yang sedang login"
+					}
+				},
+				{
+					"name": "Update Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Profile updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"user1@library.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Update profile user"
+					}
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Logout successful\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"// Clear token after logout",
+									"pm.environment.unset(\"auth_token\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "Logout dan hapus token"
+					}
+				}
+			],
+			"description": "Endpoints untuk authentication"
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Get All Books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Books have required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.length > 0) {",
+									"        pm.expect(jsonData.data[0]).to.have.property('title');",
+									"        pm.expect(jsonData.data[0]).to.have.property('author');",
+									"        pm.expect(jsonData.data[0]).to.have.property('stock');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books"
+							]
+						},
+						"description": "Get semua buku dengan pagination"
+					}
+				},
+				{
+					"name": "Get Books with Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/books?search=laskar&category_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "laskar",
+									"description": "Search by title or author"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"description": "Filter by category"
+								}
+							]
+						},
+						"description": "Get buku dengan filter search dan kategori"
+					}
+				},
+				{
+					"name": "Get Book Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Book has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('title');",
+									"    pm.expect(jsonData.data).to.have.property('author');",
+									"    pm.expect(jsonData.data).to.have.property('category');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/books/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"1"
+							]
+						},
+						"description": "Get detail buku berdasarkan ID"
+					}
+				},
+				{
+					"name": "Create Book (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Book created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData).to.have.property('data');",
+									"    pm.environment.set(\"created_book_id\", jsonData.data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Test Book Title",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Test Author",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2024",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "cover_image",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books"
+							]
+						},
+						"description": "Create buku baru (Admin only). Login sebagai admin terlebih dahulu."
+					}
+				},
+				{
+					"name": "Create Book - Validation Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"Response has validation errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"AB\",\n    \"author\": \"\",\n    \"year\": 1800,\n    \"stock\": -5,\n    \"category_id\": 999\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books"
+							]
+						},
+						"description": "Test validasi create book:\n- title min 3 karakter\n- author required\n- year min 1900\n- stock >= 0\n- category_id must exist"
+					}
+				},
+				{
+					"name": "Update Book (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Book updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Book Title\",\n    \"author\": \"Updated Author\",\n    \"year\": 2024,\n    \"stock\": 15,\n    \"category_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/books/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"1"
+							]
+						},
+						"description": "Update buku (Admin only)"
+					}
+				},
+				{
+					"name": "Delete Book (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 204\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/books/{{created_book_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"{{created_book_id}}"
+							]
+						},
+						"description": "Delete buku (Admin only). Gunakan ID buku yang dibuat dari Create Book."
+					}
+				}
+			],
+			"description": "Endpoints untuk manajemen buku"
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Categories have name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.length > 0) {",
+									"        pm.expect(jsonData.data[0]).to.have.property('name');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Get semua kategori"
+					}
+				},
+				{
+					"name": "Create Category (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Category created\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('data');",
+									"    pm.environment.set(\"created_category_id\", jsonData.data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Category\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Create kategori baru (Admin only)"
+					}
+				},
+				{
+					"name": "Update Category (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Category Name\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/categories/{{created_category_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories",
+								"{{created_category_id}}"
+							]
+						},
+						"description": "Update kategori (Admin only)"
+					}
+				},
+				{
+					"name": "Delete Category (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 204\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/categories/{{created_category_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories",
+								"{{created_category_id}}"
+							]
+						},
+						"description": "Delete kategori (Admin only)"
+					}
+				}
+			],
+			"description": "Endpoints untuk manajemen kategori"
+		},
+		{
+			"name": "Borrows",
+			"item": [
+				{
+					"name": "Get My Borrows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/borrows",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows"
+							]
+						},
+						"description": "Get daftar peminjaman user (User melihat miliknya sendiri, Admin melihat semua)"
+					}
+				},
+				{
+					"name": "Get Borrows with Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/borrows?status=BORROWED&search=laskar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "BORROWED",
+									"description": "Filter by status (BORROWED/RETURNED)"
+								},
+								{
+									"key": "search",
+									"value": "laskar",
+									"description": "Search by book title"
+								}
+							]
+						},
+						"description": "Get peminjaman dengan filter"
+					}
+				},
+				{
+					"name": "Get Borrow Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Borrow has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('status');",
+									"    pm.expect(jsonData.data).to.have.property('book');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/borrows/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows",
+								"1"
+							]
+						},
+						"description": "Get detail peminjaman"
+					}
+				},
+				{
+					"name": "Borrow Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 or 422\", function () {",
+									"    // 201 = success, 422 = validation error (max 3 books or stock 0)",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 422]);",
+									"});",
+									"",
+									"if (pm.response.code === 201) {",
+									"    pm.test(\"Borrow created successfully\", function () {",
+									"        var jsonData = pm.response.json();",
+									"        pm.expect(jsonData).to.have.property('data');",
+									"        pm.environment.set(\"created_borrow_id\", jsonData.data.id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"book_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/borrows",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows"
+							]
+						},
+						"description": "Pinjam buku. Login sebagai user terlebih dahulu.\n\nAturan:\n- Stock buku harus > 0\n- User maksimal pinjam 3 buku aktif"
+					}
+				},
+				{
+					"name": "Borrow Book - Stock Zero (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 (validation error)\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"Error message about stock\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"book_id\": 999\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/borrows",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows"
+							]
+						},
+						"description": "Test tidak bisa pinjam buku dengan stock = 0 atau buku tidak ada"
+					}
+				},
+				{
+					"name": "Return Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Return successful\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.data.status).to.equal('RETURNED');",
+									"});",
+									"",
+									"pm.test(\"Late fee calculated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('late_fee');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/borrows/{{created_borrow_id}}/return",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows",
+								"{{created_borrow_id}}",
+								"return"
+							]
+						},
+						"description": "Kembalikan buku yang dipinjam. Stock akan bertambah otomatis dan denda dihitung jika terlambat."
+					}
+				},
+				{
+					"name": "Return Book - Other User (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403 (forbidden)\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Unauthorized message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/borrows/999/return",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows",
+								"999",
+								"return"
+							]
+						},
+						"description": "Test Policy: User tidak bisa return pinjaman milik user lain"
+					}
+				},
+				{
+					"name": "Update Borrow Status (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 403\", function () {",
+									"    // 200 = success (admin), 403 = forbidden (user)",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"RETURNED\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/borrows/1/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows",
+								"1",
+								"status"
+							]
+						},
+						"description": "Admin mengubah status peminjaman (untuk koreksi data)"
+					}
+				}
+			],
+			"description": "Endpoints untuk peminjaman buku"
+		},
+		{
+			"name": "Admin Dashboard",
+			"item": [
+				{
+					"name": "Get Dashboard Statistics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 403\", function () {",
+									"    // 200 = success (admin), 403 = forbidden (user)",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    pm.test(\"Has dashboard statistics\", function () {",
+									"        var jsonData = pm.response.json();",
+									"        pm.expect(jsonData).to.have.property('total_books');",
+									"        pm.expect(jsonData).to.have.property('total_borrows');",
+									"        pm.expect(jsonData).to.have.property('active_borrows');",
+									"        pm.expect(jsonData).to.have.property('total_late_fees');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"dashboard"
+							]
+						},
+						"description": "Get statistik dashboard admin (Admin only)"
+					}
+				},
+				{
+					"name": "Export Transactions CSV",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 403\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    pm.test(\"Response is CSV\", function () {",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.include('text/csv');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/csv"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/export",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"export"
+							]
+						},
+						"description": "Export semua transaksi ke CSV (Admin only)"
+					}
+				},
+				{
+					"name": "Export Transactions CSV with Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 403\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/csv"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/export?status=RETURNED&category_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"export"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "RETURNED",
+									"description": "Filter by status"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"description": "Filter by category"
+								}
+							]
+						},
+						"description": "Export transaksi dengan filter"
+					}
+				}
+			],
+			"description": "Admin dashboard endpoints"
+		},
+		{
+			"name": "Policy Tests",
+			"item": [
+				{
+					"name": "User Cannot Access Other User Borrow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403 or 404\", function () {",
+									"    // User tidak bisa akses borrow milik user lain",
+									"    pm.expect(pm.response.code).to.be.oneOf([403, 404]);",
+									"});",
+									"",
+									"pm.test(\"Access denied message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/borrows/999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"borrows",
+								"999"
+							]
+						},
+						"description": "Test Policy: User tidak bisa akses detail borrow milik user lain. Login sebagai user biasa terlebih dahulu."
+					}
+				},
+				{
+					"name": "User Cannot Create Book (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Forbidden message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test Book\",\n    \"author\": \"Test Author\",\n    \"year\": 2024,\n    \"stock\": 10,\n    \"category_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books"
+							]
+						},
+						"description": "Test Policy: User biasa tidak bisa membuat buku (hanya Admin). Login sebagai user biasa terlebih dahulu."
+					}
+				},
+				{
+					"name": "User Cannot Delete Book (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Forbidden message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/books/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"books",
+								"1"
+							]
+						},
+						"description": "Test Policy: User biasa tidak bisa hapus buku (hanya Admin). Login sebagai user biasa terlebih dahulu."
+					}
+				},
+				{
+					"name": "User Cannot Access Admin Dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Forbidden message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"dashboard"
+							]
+						},
+						"description": "Test Policy: User biasa tidak bisa akses admin dashboard. Login sebagai user biasa terlebih dahulu."
+					}
+				}
+			],
+			"description": "Test cases untuk Policy/Authorization"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		}
+	]
+}

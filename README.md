@@ -329,7 +329,8 @@ web/
 ### Services
 - `BorrowService` - Business logic untuk peminjaman & denda
 - `ExportService` - Export data ke CSV
+## 👥 **Tim Pengembang**
 
-## 📄 License
-
-MIT
+- **Nama Amrosi 1** - NIM: 2402310187
+- **Nama Muhammad Ali ridho** - NIM: 2402310177
+- **Nama Hendra Efendi** - NIM: 2402310209

@@ -334,3 +334,7 @@ web/
 - **Nama Amrosi** - NIM: 2402310187
 - **Nama Muhammad Ali Ridho** - NIM: 2402310177
 - **Nama Hendra Efendi** - NIM: 2402310209
+
+## 📄 License
+
+MIT

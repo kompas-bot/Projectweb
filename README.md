@@ -331,6 +331,6 @@ web/
 - `ExportService` - Export data ke CSV
 ## 👥 **Tim Pengembang**
 
-- **Nama Amrosi 1** - NIM: 2402310187
-- **Nama Muhammad Ali ridho** - NIM: 2402310177
+- **Nama Amrosi ** - NIM: 2402310187
+- **Nama Muhammad Ali Ridho** - NIM: 2402310177
 - **Nama Hendra Efendi** - NIM: 2402310209
